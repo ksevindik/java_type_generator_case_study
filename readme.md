@@ -1,6 +1,7 @@
 Java Type Generator Utility
 
 
+
 Aşağıdaki gibi bir text dosya içerisinde bir sınıfın ait olacağı paket ismi, sınıfın ismi ve private property’leri verildiğinde bu bilgilerden sınıfın Java kaynak kodunu oluşturan bir utility program geliştiriniz. Oluşturulan kaynak kodunda  property’lerin getter/setter,equals ve hashCode metotları da yer almalıdır. Equals ve hashCode metotlarında yer alacak property’lerin sağında bir * karakteri yer alacaktır.
 
 ```java
