@@ -54,8 +54,7 @@ public class JavaTypeGeneratorTests {
         //then
         String exptectedOutput = """
                 class Foo {
-                }
-                """;
+                }""";
         Assertions.assertEquals(exptectedOutput, output);
     }
 
@@ -87,8 +86,51 @@ public class JavaTypeGeneratorTests {
         //then
         String exptectedOutput = """
                 class Foo {
+                }""";
+        Assertions.assertEquals(exptectedOutput, output);
+    }
+
+    @Test
+    public void shouldFailGeneratingJavaClassFileGivenOnlyPackageKeyword() {
+        //given
+        String input = " package ";
+        //given
+        try {
+            String output = generator.generate(input);
+            Assertions.fail("It should have failed with IllegalArgumentException, but didn't");
+        } catch(IllegalArgumentException ex) {
+            Assertions.assertTrue(true);
+        } catch (Exception ex) {
+            Assertions.fail(ex);
+        }
+    }
+
+    @Test
+    public void shouldReturnNullWhenGivenOnlyPackageName() {
+        //given
+        String input = "package org.example.casestudies";
+        //when
+        String output = generator.generate(input);
+        //then
+        Assertions.assertNull(output);
+    }
+
+    @Test
+    public void shouldGenerateJavaClassFileWhenGivenValidPackageAndClassName() {
+        //given
+        String input = """
+                package org.example.casestudies
+                class foo
+                """;
+        //when
+        String output = generator.generate(input);
+        //then
+        String expectedOutput = """
+                package org.example.casestudies;
+                
+                class Foo {
                 }
                 """;
-        Assertions.assertEquals(exptectedOutput, output);
+        Assertions.assertEquals(expectedOutput, output);
     }
 }
