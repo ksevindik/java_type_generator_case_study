@@ -9,37 +9,36 @@ public class JavaTypeGenerator {
         input = input.trim();
         if(input.equalsIgnoreCase("package")) throw new IllegalArgumentException("Package name must be given");
 
-        String[] splitted = input.split("\n");
-        if(splitted.length == 1) {
-            String[] tokens = input.split(" ");
-            if(tokens[0].equals("class")) {
-                String classString = generateClass(tokens[1]);
-                return classString;
+        String[] splittedLines = input.split("\n");
+        if(splittedLines.length == 1) {
+            if(splittedLines[0].startsWith("class ")) {
+                String classLine = splittedLines[0];
+                String classBlock = getClassBlock(classLine);
+                String packageStatement = null;
+                return generateJavaSource(classBlock, packageStatement);
+            } else {
+                return null;
             }
+        } else if(splittedLines.length == 2) {
+            String packageLine = splittedLines[0];
+            String classLine = splittedLines[1];
+
+            String classBlock = getClassBlock(classLine);
+            String packageStatement = generatePackageStatement(packageLine);
+            return generateJavaSource(classBlock, packageStatement);
+        } else {
+            return null;
         }
 
-        if(splitted.length == 2) {
-            String packageLine = splitted[0];
-            String classLine = splitted[1];
+    }
 
-            String[] tokens = classLine.split(" ");
-            String classString = "";
-            if(tokens[0].equals("class")) {
-                classString = generateClass(tokens[1]);
-            }
-
-            String[] splittedPackageLine = packageLine.split(" ");
-            String packageString = generatePackageBlock(splittedPackageLine[1]);
-
-            String source = """
-                %s
-                
-                %s
-                """.formatted(packageString, classString);
-            return source;
+    private String getClassBlock(String input) {
+        String classString = "";
+        String[] tokens = input.split(" ");
+        if(tokens[0].equals("class")) {
+            classString = generateClass(tokens[1]);
         }
-
-        return null;
+        return classString;
     }
 
     private void validateClassName(String className) {
@@ -54,7 +53,9 @@ public class JavaTypeGenerator {
         return firstChar.toUpperCase(Locale.ENGLISH) + remainingPart;
     }
 
-    private String generatePackageBlock(String packageName) {
+    private String generatePackageStatement(String packageLine) {
+        String[] splittedPackageLine = packageLine.split(" ");
+        String packageName = splittedPackageLine[1];
         return "package " + packageName + ";";
     }
 
@@ -68,5 +69,19 @@ public class JavaTypeGenerator {
         validateClassName(rawClassName);
         String formattedClassName = formatClassName(rawClassName);
         return generateClassBlock(formattedClassName);
+    }
+
+    private String generateJavaSource(String classBlock, String packageStatement) {
+        if(packageStatement == null) {
+            return classBlock;
+        } else {
+            String source = """
+                %s
+                
+                %s
+                """.formatted(packageStatement, classBlock);
+
+            return source;
+        }
     }
 }
