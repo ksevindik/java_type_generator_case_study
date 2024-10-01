@@ -5,8 +5,8 @@ import java.util.regex.Pattern;
 
 public class JavaTypeGenerator {
     public String generate(String input) {
-        if(input == null || input.isBlank()) throw new IllegalArgumentException("Null or Empty input is given");
         input = input.trim();
+        if(input == null || input.isBlank()) throw new IllegalArgumentException("Null or Empty input is given");
         if(input.equalsIgnoreCase("package")) throw new IllegalArgumentException("Package name must be given");
 
         String[] splittedLines = input.split("\n");
