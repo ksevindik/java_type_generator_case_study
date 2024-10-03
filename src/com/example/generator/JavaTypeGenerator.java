@@ -1,35 +1,34 @@
 package com.example.generator;
 
+import javax.xml.transform.Source;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class JavaTypeGenerator {
     public String generate(String input) {
-        input = input.trim();
-        if(input == null || input.isBlank()) throw new IllegalArgumentException("Null or Empty input is given");
-        if(input.equalsIgnoreCase("package")) throw new IllegalArgumentException("Package name must be given");
+        input = validateInput(input);
+        SourceCodeStructure sc = generateSourceCodeStructure(input);
+        return generateJavaSource(sc);
+    }
+
+    private SourceCodeStructure generateSourceCodeStructure(String input) {
+        SourceCodeStructure sourceCodeStructure = new SourceCodeStructure();
 
         String[] splittedLines = input.split("\n");
-        if(splittedLines.length == 1) {
-            if(splittedLines[0].startsWith("class ")) {
-                String classLine = splittedLines[0];
-                String classBlock = getClassBlock(classLine);
-                String packageStatement = null;
-                return generateJavaSource(classBlock, packageStatement);
-            } else {
-                return null;
+        for (String line : splittedLines) {
+            if(line.startsWith("class ")) {
+                sourceCodeStructure.setClassBlock(getClassBlock(line));
+            } else if (line.startsWith("package ")) {
+                sourceCodeStructure.setPackageStatement(generatePackageStatement(line));
             }
-        } else if(splittedLines.length == 2) {
-            String packageLine = splittedLines[0];
-            String classLine = splittedLines[1];
-
-            String classBlock = getClassBlock(classLine);
-            String packageStatement = generatePackageStatement(packageLine);
-            return generateJavaSource(classBlock, packageStatement);
-        } else {
-            return null;
         }
+        return sourceCodeStructure;
+    }
 
+    private String validateInput(String input) {
+        if(input == null || input.isBlank()) throw new IllegalArgumentException("Null or Empty input is given");
+        if(input.matches("(?i)(\\s*package\\s*)$")) throw new IllegalArgumentException("Package name must be given");
+        return input.trim();
     }
 
     private String getClassBlock(String input) {
@@ -71,8 +70,13 @@ public class JavaTypeGenerator {
         return generateClassBlock(formattedClassName);
     }
 
-    private String generateJavaSource(String classBlock, String packageStatement) {
-        if(packageStatement == null) {
+    private String generateJavaSource(SourceCodeStructure sc) {
+        String classBlock = sc.getClassBlock();
+        String packageStatement = sc.getPackageStatement();
+        if(!packageStatement.isEmpty() && classBlock.isEmpty()){
+            return null;
+        }
+        if(packageStatement.isEmpty()) {
             return classBlock;
         } else {
             String source = """
