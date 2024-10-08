@@ -133,4 +133,33 @@ public class JavaTypeGeneratorTests {
                 """;
         Assertions.assertEquals(expectedOutput, output);
     }
+
+    @Test
+    public void shouldGenerateJavaClassFileWhenGivenValidPackageClassAndAtributes() {
+        //given
+        String input = """
+                package org.example.casestudies
+                class foo
+                String name
+                """;
+        //when
+        String output = generator.generate(input);
+        //then
+        String expectedOutput = """
+                package org.example.casestudies;
+                
+                class Foo {
+                    private String name;
+                    
+                    public String getName() {
+                        return name;
+                    }
+                    
+                    public void setName(String name) {
+                        this.name = name;
+                    }
+                }
+                """;
+        Assertions.assertEquals(expectedOutput, output);
+    }
 }

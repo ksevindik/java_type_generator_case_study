@@ -1,8 +1,9 @@
 package com.example.generator;
 
-import javax.xml.transform.Source;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class JavaTypeGenerator {
     public String generate(String input) {
@@ -13,15 +14,24 @@ public class JavaTypeGenerator {
 
     private SourceCodeStructure generateSourceCodeStructure(String input) {
         SourceCodeStructure sourceCodeStructure = new SourceCodeStructure();
+        String className = null;
+
 
         String[] splittedLines = input.split("\n");
         for (String line : splittedLines) {
             if(line.startsWith("class ")) {
-                sourceCodeStructure.setClassBlock(getClassBlock(line));
+                className = line.split("")[1];
             } else if (line.startsWith("package ")) {
                 sourceCodeStructure.setPackageStatement(generatePackageStatement(line));
+            } else {
+                List<String> attributeList = sourceCodeStructure.getAttributeList();
+                attributeList.add(generateAttributeStatement(line));
             }
+
         }
+
+        generateClassBlock(className, sourceCodeStructure.getAttributeList());
+
         return sourceCodeStructure;
     }
 
@@ -31,14 +41,14 @@ public class JavaTypeGenerator {
         return input.trim();
     }
 
-    private String getClassBlock(String input) {
-        String classString = "";
-        String[] tokens = input.split(" ");
-        if(tokens[0].equals("class")) {
-            classString = generateClass(tokens[1]);
-        }
-        return classString;
-    }
+//    private String getClassBlock(String input) {
+//        String classString = "";
+//        String[] tokens = input.split(" ");
+//        if(tokens[0].equals("class")) {
+//            classString = generateClass(tokens[1]);
+//        }
+//        return classString;
+//    }
 
     private void validateClassName(String className) {
         Pattern pattern = Pattern.compile("^[A-Za-z_][A-Za-z0-9_$]*$");
@@ -58,16 +68,35 @@ public class JavaTypeGenerator {
         return "package " + packageName + ";";
     }
 
-    private String generateClassBlock(String className) {
+    private String generateClassBlock(String className, List<String> attributeList) {
         return """
                 class %s {
-                }""".formatted(className);
+                $s
+                }""".formatted(className, attributeList.get(0));
     }
 
-    private String generateClass(String rawClassName) {
-        validateClassName(rawClassName);
-        String formattedClassName = formatClassName(rawClassName);
-        return generateClassBlock(formattedClassName);
+//    private String generateClass(String rawClassName) {
+//        validateClassName(rawClassName);
+//        String formattedClassName = formatClassName(rawClassName);
+//        return generateClassBlock(formattedClassName);
+//    }
+
+    private String generateAttributeStatement(String attributeLine) {
+        String[] splittedLine = attributeLine.split(" ");
+        String attributeType = splittedLine[0];
+        String attributeName = splittedLine[1];
+        String attributeStatement = """
+                private %s %s;
+                
+                public %s get%s() {
+                        return %s;
+                    }
+                    
+                    public void set%s(%s %s) {
+                        this.name = %s;
+                    }
+                """.formatted(attributeType, attributeName, attributeType, attributeName, attributeName, attributeName, attributeType, attributeName, attributeName);
+        return attributeStatement;
     }
 
     private String generateJavaSource(SourceCodeStructure sc) {
