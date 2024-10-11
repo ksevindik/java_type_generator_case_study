@@ -22,3 +22,15 @@ Integer subtract Integer operand1 Integer operand2
 ```
 
 Bu utility geliştirilirken JUnit dışında herhangi bir 3rd party kütüphane kullanılmamalıdır. Geliştirme sadece core Java kütüphaneleri kullanılarak yapılmalıdır.
+
+raw lines of string --> transform into --> structured lines of string --> transform into source code structure --> transform into source code
+
+String rawInput = "";
+InputSource is = new InputSource(rawInput);
+SourceCodeStructure sc = new SourceCodeStructure(is);
+return sc.toJavaSource();
+
+IO API & Decorator pattern
+
+InputStream is = new BufferedInputStream(new FileInputStream(new File("x.txt")));
+is.read()

@@ -19,4 +19,8 @@ public class SourceCodeStructure {
     public void setPackageStatement(String packageStatement) {
         this.packageStatement = packageStatement;
     }
+
+    public String toJavaSource() {
+        throw new RuntimeException("not implemented");
+    }
 }

@@ -133,4 +133,93 @@ public class JavaTypeGeneratorTests {
                 """;
         Assertions.assertEquals(expectedOutput, output);
     }
+
+    @Test
+    public void shouldFailCreatingJavaClassFileWhenGivenNullAttributeName() {
+        try {
+        //given
+        String input = """
+                package org.example.casestudies
+                class foo
+                String
+                """;
+        //when
+        String output = generator.generate(input);
+        //then
+            Assertions.fail("It should have failed with IllegalArgumentException, but didn't");
+        } catch (IllegalArgumentException ex) {
+            Assertions.assertTrue(true);
+        } catch (Exception ex) {
+            Assertions.fail(ex);
+        }
+
+    }
+
+    @Test
+    public void shouldGenerateJavaClassFileWhenGivenValidPackageClassNameAndSingleAttribute() {
+        //given
+        String input = """
+                package org.example.casestudies
+                class foo
+                String name
+                """;
+        //when
+        String output = generator.generate(input);
+        //then
+        String expectedOutput = """
+                package org.example.casestudies;
+                
+                class Foo {
+                    private String name;
+                    
+                    getName() {
+                        return this.name;
+                    }
+                    
+                    setName(String name) {
+                        this.name = name;
+                    }
+                }
+                """;
+        Assertions.assertEquals(expectedOutput, output);
+    }
+
+    @Test
+    public void shouldGenerateJavaClassFileWhenGivenValidPackageClassNameAndMultipleAttribute() {
+        //given
+        String input = """
+                package org.example.casestudies
+                class foo
+                String name
+                Integer age
+                """;
+        //when
+        String output = generator.generate(input);
+        //then
+        String expectedOutput = """
+                package org.example.casestudies;
+                
+                class Foo {
+                    private String name;
+                    private Integer age;
+                    
+                    getName() {
+                        return this.name;
+                    }
+                    
+                    setName(String name) {
+                        this.name = name;
+                    }
+                    
+                    getAge() {
+                        return this.age;
+                    }
+                    
+                    setAge(Integer age) {
+                        this.age = age;
+                    }
+                }
+                """;
+        Assertions.assertEquals(expectedOutput, output);
+    }
 }
