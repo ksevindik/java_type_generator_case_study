@@ -4,23 +4,25 @@ public class SourceCodeStructure {
     private String classBlock = "";
     private String packageStatement = "";
 
-    public String getClassBlock() {
-        return classBlock;
-    }
-
-    public void setClassBlock(String classBlock) {
-        this.classBlock = classBlock;
-    }
-
-    public String getPackageStatement() {
-        return packageStatement;
-    }
-
-    public void setPackageStatement(String packageStatement) {
-        this.packageStatement = packageStatement;
+    public SourceCodeStructure(InputSource inputSource) {
+        this.packageStatement = new PackageStatementGenerator().generate(inputSource.getPackageLine());
+        this.classBlock = new ClassBlockGenerator().generate(inputSource.getClassLine(), inputSource.getAttributeLines());
     }
 
     public String toJavaSource() {
-        throw new RuntimeException("not implemented");
+        if(!packageStatement.isEmpty() && classBlock.isEmpty()){
+            return null;
+        }
+        if(packageStatement.isEmpty()) {
+            return classBlock;
+        } else {
+            String source = """
+                %s
+                
+                %s
+                """.formatted(packageStatement, classBlock);
+
+            return source;
+        }
     }
 }
