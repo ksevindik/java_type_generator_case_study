@@ -6,12 +6,20 @@ import java.util.regex.Pattern;
 
 public class ClassBlockGenerator {
 
-    private AttributeGenerator attributeGenerator = new AttributeGenerator();
+    private ClassBlockGenerator() {
+
+    }
+
+    private static ClassBlockGenerator instance = new ClassBlockGenerator();
+
+    public static ClassBlockGenerator getInstance() {
+        return instance;
+    }
 
     public String generate(String classLine, List<String> attributeLine) {
         if(classLine == null) return "";
 
-        String attributeString = attributeGenerator.generate(attributeLine);
+        String attributeString = AttributeGenerator.getInstance().generate(attributeLine);
 
         String classBlock = "";
         String[] tokens = classLine.split(" ");

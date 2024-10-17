@@ -5,8 +5,8 @@ public class SourceCodeStructure {
     private String packageStatement = "";
 
     public SourceCodeStructure(InputSource inputSource) {
-        this.packageStatement = new PackageStatementGenerator().generate(inputSource.getPackageLine());
-        this.classBlock = new ClassBlockGenerator().generate(inputSource.getClassLine(), inputSource.getAttributeLines());
+        this.packageStatement = PackageStatementGenerator.getInstance().generate(inputSource.getPackageLine());
+        this.classBlock = ClassBlockGenerator.getInstance().generate(inputSource.getClassLine(), inputSource.getAttributeLines());
     }
 
     public String toJavaSource() {

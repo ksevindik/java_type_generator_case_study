@@ -5,6 +5,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AttributeGenerator {
+    private AttributeGenerator() {
+
+    }
+
+    private static AttributeGenerator instance = new AttributeGenerator();
+
+    public static AttributeGenerator getInstance() {
+        return instance;
+    }
+
     public String generate(List<String> attributeLines) {
         String attributeString = null;
         List<String> declarationList = new ArrayList<>();
