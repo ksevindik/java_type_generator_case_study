@@ -7,6 +7,7 @@ public class InputSource {
     private String rawInput;
     private String classLine;
     private String packageLine;
+    private String interfaceLine;
     private List<String> attributeLines = new ArrayList<>();
 
     public InputSource(String rawInput) {
@@ -17,6 +18,8 @@ public class InputSource {
                 this.classLine = line;
             } else if (line.startsWith("package ")) {
                 this.packageLine = line;
+            } else if (line.startsWith("interface ")) {
+                this.interfaceLine = line;
             } else {
                 this.attributeLines.add(line);
             }
@@ -26,6 +29,7 @@ public class InputSource {
     private String validateInput(String input) {
         if(input == null || input.isBlank()) throw new IllegalArgumentException("Null or Empty input is given");
         if(input.matches("(?i)(\\s*package\\s*)$")) throw new IllegalArgumentException("Package name must be given");
+        if(input.matches("(?i)(\\s*interface\\s*)$")) throw new IllegalArgumentException("Interface name must be given");
         return input.trim();
     }
 
@@ -39,5 +43,9 @@ public class InputSource {
 
     public List<String> getAttributeLines() {
         return attributeLines;
+    }
+
+    public String getInterfaceLine() {
+        return interfaceLine;
     }
 }

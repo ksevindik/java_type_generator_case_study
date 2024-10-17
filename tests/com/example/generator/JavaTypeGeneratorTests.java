@@ -222,4 +222,6 @@ public class JavaTypeGeneratorTests {
                 """;
         Assertions.assertEquals(expectedOutput, output);
     }
+
+
 }
