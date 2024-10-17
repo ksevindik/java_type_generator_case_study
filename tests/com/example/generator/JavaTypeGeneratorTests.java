@@ -53,7 +53,7 @@ public class JavaTypeGeneratorTests {
         String output = generator.generate(input);
         //then
         String exptectedOutput = """
-                class Foo {
+                public class Foo {
                 }""";
         Assertions.assertEquals(exptectedOutput, output);
     }
@@ -85,7 +85,7 @@ public class JavaTypeGeneratorTests {
         String output = generator.generate(input);
         //then
         String exptectedOutput = """
-                class Foo {
+                public class Foo {
                 }""";
         Assertions.assertEquals(exptectedOutput, output);
     }
@@ -128,7 +128,7 @@ public class JavaTypeGeneratorTests {
         String expectedOutput = """
                 package org.example.casestudies;
                 
-                class Foo {
+                public class Foo {
                 }
                 """;
         Assertions.assertEquals(expectedOutput, output);
@@ -169,7 +169,7 @@ public class JavaTypeGeneratorTests {
         String expectedOutput = """
                 package org.example.casestudies;
                 
-                class Foo {
+                public class Foo {
                     private String name;
                     
                     getName() {
@@ -199,7 +199,7 @@ public class JavaTypeGeneratorTests {
         String expectedOutput = """
                 package org.example.casestudies;
                 
-                class Foo {
+                public class Foo {
                     private String name;
                     private Integer age;
                     

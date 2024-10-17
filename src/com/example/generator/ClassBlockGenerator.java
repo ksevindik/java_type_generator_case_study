@@ -49,11 +49,11 @@ public class ClassBlockGenerator {
 
         if(attributeString != null && !attributeString.trim().isEmpty()) {
             return """
-                class %s {
+                public class %s {
                 %s}""".formatted(formattedClassName, attributeString);
         } else {
             return """
-                class %s {
+                public class %s {
                 }""".formatted(formattedClassName);
         }
     }
