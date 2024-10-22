@@ -10,28 +10,18 @@ public class SourceCodeStructure {
     public SourceCodeStructure(InputSource inputSource) {
         this.packageStatement = PackageStatementGenerator.getInstance().generate(inputSource.getPackageLine());
         this.classBlock = ClassBlockGenerator.getInstance().generate(inputSource.getClassLine(), inputSource.getAttributeLines());
-
-        String interfaceLine = inputSource.getInterfaceLine();
-        String[] tokens = interfaceLine.split(" ");
-        String key = tokens[0];
-        String interfaceName = formatInterfaceName(tokens[1]);
-        if(key.equals("interface")) {
-            this.interfaceBlock = """
-                    public interface %s {
-                    }""".formatted(interfaceName);
+        if(classBlock.isEmpty() && inputSource.getInterfaceLine() != null) {
+            this.interfaceBlock = InterfaceBlockGenerator.getInstance().generate(inputSource.getInterfaceLine(), inputSource.getAttributeLines());
         }
-    }
-
-    private String formatInterfaceName(String interfaceName) {
-        String firstChar = interfaceName.substring(0,1);
-        String remainingPart = interfaceName.length()>1?interfaceName.substring(1):"";
-        return firstChar.toUpperCase(Locale.ENGLISH) + remainingPart;
     }
 
     public String toJavaSource() {
-        if(!packageStatement.isEmpty() && (classBlock.isEmpty() || interfaceBlock.isEmpty())){
+        if(packageStatement.isEmpty() && classBlock.isEmpty() && interfaceBlock.isEmpty()){
+            return null;
+        } else if (!packageStatement.isEmpty() && classBlock.isEmpty() && interfaceBlock.isEmpty()) {
             return null;
         }
+
         if(packageStatement.isEmpty()) {
             String block = interfaceBlock == "" ? classBlock : interfaceBlock;
             return block;

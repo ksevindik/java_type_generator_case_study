@@ -1,8 +1,10 @@
 package com.example.generator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ClassBlockGenerator {
 
@@ -46,15 +48,25 @@ public class ClassBlockGenerator {
     private String generateClassBlock(String className, String attributeString) {
         validateClassName(className);
         String formattedClassName = formatClassName(className);
-
-        if(attributeString != null && !attributeString.trim().isEmpty()) {
-            return """
+        String block = """
                 public class %s {
                 %s}""".formatted(formattedClassName, attributeString);
+
+        if(attributeString.trim().isEmpty()) {
+            return squizeEmptyBody(block);
         } else {
-            return """
-                public class %s {
-                }""".formatted(formattedClassName);
+            return block;
         }
+    }
+
+    public String squizeEmptyBody(String block) {
+        String[] splittedLines = block.split("\n");
+        List<String> newLines = new ArrayList<>();
+        for (String line : splittedLines) {
+            if(!line.trim().isEmpty()) {
+                newLines.add(line);
+            }
+        }
+        return  newLines.stream().collect(Collectors.joining("\n"));
     }
 }

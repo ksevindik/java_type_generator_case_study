@@ -39,4 +39,22 @@ public class JavaInterfaceGeneratorTests {
                 }""";
         Assertions.assertEquals(expected, output);
     }
+
+    @Test
+    public void shouldCreateJavaClassFileGivenInterfaceAndMethod() {
+        //given
+        String input = """
+                interface foo
+                String getName
+                """;
+        //when
+        JavaTypeGenerator generator = new JavaTypeGenerator();
+        String output = generator.generate(input);
+        //then
+        String expected = """
+                public interface Foo {
+                    public String getName();
+                }""";
+        Assertions.assertEquals(expected, output);
+    }
 }
