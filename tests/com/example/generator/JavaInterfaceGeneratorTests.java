@@ -57,4 +57,40 @@ public class JavaInterfaceGeneratorTests {
                 }""";
         Assertions.assertEquals(expected, output);
     }
+
+    @Test
+    public void shouldCreateJavaClassFileGivenInterfaceAndMethodWithOneParameter() {
+        //given
+        String input = """
+                interface foo
+                void setName String name 
+                """;
+        //when
+        JavaTypeGenerator generator = new JavaTypeGenerator();
+        String output = generator.generate(input);
+        //then
+        String expected = """
+                public interface Foo {
+                    public void setName(String name);
+                }""";
+        Assertions.assertEquals(expected, output);
+    }
+
+    @Test
+    public void shouldCreateJavaClassFileGivenInterfaceAndMethodWithMultipleParameters() {
+        //given
+        String input = """
+                interface foo
+                void setPerson String name Integer age 
+                """;
+        //when
+        JavaTypeGenerator generator = new JavaTypeGenerator();
+        String output = generator.generate(input);
+        //then
+        String expected = """
+                public interface Foo {
+                    public void setPerson(String name, Integer age);
+                }""";
+        Assertions.assertEquals(expected, output);
+    }
 }
