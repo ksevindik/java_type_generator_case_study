@@ -53,7 +53,7 @@ public class AttributeGenerator {
     }
 
     private String generateGetter(String attributeName) {
-        String signature = "get" + capitalizeFirstLetter(attributeName) + "()";
+        String signature = "public get" + capitalizeFirstLetter(attributeName) + "()";
         String body = "return this." + attributeName + ";";
         String getter = """
                 %s {
@@ -64,7 +64,7 @@ public class AttributeGenerator {
     }
 
     private String generateSetter(String attributeName, String attributeType) {
-        String methodName = "set" + capitalizeFirstLetter(attributeName);
+        String methodName = "public set" + capitalizeFirstLetter(attributeName);
         String parameters = attributeType + " " + attributeName;
         String signature = methodName + "(" + parameters + ")";
         String body = "this." + attributeName + " = " + attributeName + ";";

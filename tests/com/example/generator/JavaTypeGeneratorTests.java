@@ -172,11 +172,11 @@ public class JavaTypeGeneratorTests {
                 public class Foo {
                     private String name;
                     
-                    getName() {
+                    public getName() {
                         return this.name;
                     }
                     
-                    setName(String name) {
+                    public setName(String name) {
                         this.name = name;
                     }
                 }
@@ -203,19 +203,19 @@ public class JavaTypeGeneratorTests {
                     private String name;
                     private Integer age;
                     
-                    getName() {
+                    public getName() {
                         return this.name;
                     }
                     
-                    setName(String name) {
+                    public setName(String name) {
                         this.name = name;
                     }
                     
-                    getAge() {
+                    public getAge() {
                         return this.age;
                     }
                     
-                    setAge(Integer age) {
+                    public setAge(Integer age) {
                         this.age = age;
                     }
                 }
